@@ -2,7 +2,16 @@
 <html lang="de"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hong-Ting Chen</title>
+    <title>Hong-Ting Chen · Data Analyst, Data &amp; AI</title>
+    <meta name="description" content="Portfolio &amp; CV of Hong-Ting Chen – Data Analyst at Telekom Deutschland, B.A. Business Administration (FOM). VBA &amp; Python automation, Power BI, SAP Analytics Cloud, Generative AI.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='13' fill='%230a0a0a'/%3E%3Cpath fill='%23E20074' d='M12 14h40v12H40v24H24V26H12z'/%3E%3C/svg%3E">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Hong-Ting Chen · Data Analyst – Controlling, Data &amp; AI">
+    <meta property="og:description" content="Data Analyst in Controlling at Telekom Deutschland · B.A. Business Administration (FOM) · VBA &amp; Python automation, Power BI, SAP Analytics Cloud, Generative AI.">
+    <meta property="og:url" content="https://hongtingchen.github.io/">
+    <!-- TODO: og-image.png (1200x630, dunkler Hintergrund + Name in Magenta) ins Repo-Root legen -->
+    <meta property="og:image" content="https://hongtingchen.github.io/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="preconnect" href="https://fonts.googleapis.com/">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
     <link href="./Lebenslauf_animated_files/css2" rel="stylesheet">
@@ -957,11 +966,100 @@
             display: inline-block;
         }
 
-        /* ── CERT GRID ───────────────────────────────── */
-        .cert-grid {
+        /* ── CERT TIMELINE (vertikaler Zahlenstrahl) ── */
+        .cert-timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px 0 40px;
+        }
+
+        /* Achse (Track) */
+        .cert-axis {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 2px;
+            transform: translateX(-50%);
+            background: var(--border);
+            border-radius: 2px;
+        }
+
+        /* Scroll-gesteuerte Füllung der Achse */
+        .cert-axis-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 0%;
+            background: linear-gradient(180deg, var(--magenta), rgba(226, 0, 116, 0.5));
+            box-shadow: 0 0 12px var(--magenta-glow);
+            border-radius: 2px;
+        }
+
+        .cert-item {
+            position: relative;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-            gap: 20px;
+            grid-template-columns: 1fr 60px 1fr;
+            align-items: center;
+            margin-bottom: 48px;
+        }
+        .cert-item:last-child { margin-bottom: 0; }
+
+        /* Punkt auf der Achse */
+        .cert-node {
+            grid-column: 2;
+            justify-self: center;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2;
+        }
+        .cert-item.visible .cert-node {
+            background: var(--magenta);
+            border-color: var(--magenta);
+            box-shadow: 0 0 16px var(--magenta-glow);
+            transform: scale(1.15);
+        }
+
+        /* Jahreszahl gegenüber der Karte */
+        .cert-axis-year {
+            font-size: 1.4em;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            opacity: 0;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .cert-item.visible .cert-axis-year {
+            opacity: 1;
+            color: var(--magenta);
+        }
+
+        /* Karten alternierend links/rechts */
+        .cert-item .cert-card {
+            opacity: 0;
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                        transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                        background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+        .cert-item.left .cert-card { grid-column: 1; transform: translateX(-32px); }
+        .cert-item.left .cert-axis-year { grid-column: 3; justify-self: start; padding-left: 8px; transform: translateX(24px); }
+        .cert-item.right .cert-card { grid-column: 3; transform: translateX(32px); }
+        .cert-item.right .cert-axis-year { grid-column: 1; justify-self: end; padding-right: 8px; text-align: right; transform: translateX(-24px); }
+        .cert-item.right .cert-axis-year,
+        .cert-item.left .cert-axis-year { grid-row: 1; }
+        .cert-item .cert-node { grid-row: 1; }
+        .cert-item .cert-card { grid-row: 1; }
+
+        .cert-item.visible .cert-card,
+        .cert-item.visible .cert-axis-year {
+            opacity: 1;
+            transform: translateX(0);
         }
 
         .cert-card {
@@ -1130,7 +1228,35 @@
             .photo-section { flex-direction: column; align-items: flex-start; gap: 30px; }
             .photo-circle { width: 120px; height: 120px; }
             footer { padding: 50px 24px; flex-direction: column; align-items: flex-start; }
-            .cert-grid { grid-template-columns: 1fr; }
+            .cert-timeline { padding-left: 8px; }
+            .cert-axis { left: 15px; transform: none; }
+            .cert-item,
+            .cert-item.left,
+            .cert-item.right {
+                grid-template-columns: 30px 1fr;
+                margin-bottom: 36px;
+            }
+            .cert-item .cert-node,
+            .cert-item.left .cert-node,
+            .cert-item.right .cert-node { grid-column: 1; grid-row: 1; justify-self: center; }
+            .cert-item.left .cert-card,
+            .cert-item.right .cert-card {
+                grid-column: 2;
+                grid-row: 1;
+                transform: translateX(24px);
+            }
+            .cert-item.left .cert-axis-year,
+            .cert-item.right .cert-axis-year {
+                grid-column: 2;
+                grid-row: 2;
+                justify-self: start;
+                padding: 6px 0 0 0;
+                text-align: left;
+                font-size: 1em;
+                transform: translateX(24px);
+            }
+            .cert-item.visible .cert-card,
+            .cert-item.visible .cert-axis-year { transform: translateX(0); }
             .cursor-dot, .cursor-ring { display: none; }
             body { cursor: auto; }
         }
@@ -1229,6 +1355,344 @@
         .photo-card:hover .edit-indicator {
             opacity: 1;
         }
+
+        /* ── PIXEL T BACKDROP (Experience) ───────────── */
+        #experience { position: relative; }
+        #experience > * { position: relative; z-index: 1; }
+
+        .pixel-t-scene {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 4%;
+            perspective: 1100px;
+            pointer-events: none;
+            opacity: 0;
+            will-change: opacity;
+        }
+
+        .pixel-t {
+            --px: 34px;
+            position: relative;
+            width: calc(var(--px) * 9);
+            height: calc(var(--px) * 10);
+            transform-style: preserve-3d;
+            animation: tSway 16s ease-in-out infinite alternate;
+        }
+
+        .pixel-t-layer {
+            position: absolute;
+            top: 0; left: 0;
+            width: var(--px);
+            height: var(--px);
+        }
+
+        @keyframes tSway {
+            from { transform: rotateX(14deg) rotateY(-26deg); }
+            to   { transform: rotateX(10deg) rotateY(26deg); }
+        }
+
+        @media (max-width: 1024px) {
+            .pixel-t { --px: 24px; }
+            .pixel-t-scene { justify-content: center; padding-right: 0; }
+        }
+        @media (max-width: 768px) {
+            .pixel-t { --px: 16px; }
+        }
+
+        /* ── SCROLL-SCRUB CHART (Quantitative Finance) ── */
+        .chart-scrub-wrap { height: 260vh; }
+
+        .chart-scrub-sticky {
+            position: sticky;
+            top: 90px;
+            height: calc(100vh - 120px);
+            display: flex;
+            align-items: center;
+        }
+
+        .chart-container { position: relative; }
+
+        .chart-annotations {
+            position: absolute;
+            inset: 40px;
+            pointer-events: none;
+        }
+
+        .chart-anno {
+            position: absolute;
+            left: var(--ax);
+            top: var(--ay);
+            transform: translate(-50%, -50%);
+        }
+
+        .anno-dot {
+            position: absolute;
+            left: 50%; top: 50%;
+            width: 14px; height: 14px;
+            margin: -7px 0 0 -7px;
+            border-radius: 50%;
+            background: var(--magenta);
+            box-shadow: 0 0 0 4px rgba(226,0,116,0.18), 0 0 14px var(--magenta-glow);
+            transform: scale(0);
+            transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .anno-card {
+            position: absolute;
+            left: 50%;
+            bottom: 24px;
+            transform: translateX(-50%) translateY(14px) scale(0.92);
+            width: 250px;
+            padding: 14px 16px;
+            background: rgba(20, 20, 20, 0.92);
+            border: 1px solid rgba(226, 0, 116, 0.35);
+            border-left: 3px solid var(--magenta);
+            border-radius: 10px;
+            backdrop-filter: blur(6px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            opacity: 0;
+            transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .chart-anno.below .anno-card { bottom: auto; top: 24px; }
+        .chart-anno.shift-left .anno-card {
+            left: auto; right: -20px;
+            transform: translateY(14px) scale(0.92);
+        }
+
+        .chart-anno.visible .anno-dot { transform: scale(1); }
+        .chart-anno.visible .anno-card {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0) scale(1);
+        }
+        .chart-anno.shift-left.visible .anno-card { transform: translateY(0) scale(1); }
+
+        .anno-index {
+            font-size: 0.65em;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--magenta);
+        }
+
+        .anno-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.95em;
+            font-weight: 700;
+            color: var(--white-pure);
+            margin: 2px 0 6px;
+        }
+
+        .anno-text {
+            font-size: 0.72em;
+            font-weight: 300;
+            line-height: 1.55;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .chart-scrub-wrap { height: auto; }
+            .chart-scrub-sticky { position: static; height: auto; display: block; }
+            .chart-annotations {
+                position: static;
+                inset: auto;
+                display: flex;
+                flex-direction: column;
+                gap: 14px;
+                margin-top: 24px;
+                pointer-events: auto;
+            }
+            .chart-anno { position: static; transform: none; }
+            .anno-dot { display: none; }
+            .anno-card {
+                position: static;
+                width: auto;
+                transform: translateY(20px) scale(0.97);
+            }
+            .chart-anno.below .anno-card,
+            .chart-anno.shift-left .anno-card { position: static; transform: translateY(20px) scale(0.97); }
+            .chart-anno.visible .anno-card,
+            .chart-anno.below.visible .anno-card,
+            .chart-anno.shift-left.visible .anno-card { transform: none; }
+        }
+
+        /* ── ACTIVE NAV ──────────────────────────────── */
+        .nav-links a.active { color: var(--white-pure); }
+        .nav-links a.active::after { width: 100%; }
+
+        /* ── MOTION / PRINT SAFETY ───────────────────── */
+        @media (prefers-reduced-motion: reduce) {
+            .pixel-t { animation: none; transform: rotateX(12deg) rotateY(-18deg); }
+            .anno-card, .anno-dot { transition: none; }
+            .cert-item .cert-card, .cert-item .cert-axis-year, .cert-node { transition: none; }
+        }
+
+        @media print {
+            .pixel-t-scene { display: none !important; }
+            .cert-item .cert-card, .cert-item .cert-axis-year { opacity: 1 !important; transform: none !important; }
+            .cert-axis-fill { height: 100% !important; }
+            .chart-scrub-wrap { height: auto; }
+            .chart-scrub-sticky { position: static; height: auto; }
+            .chart-anno .anno-card { opacity: 1 !important; transform: none !important; position: static; }
+            .anno-dot { display: none; }
+            .chart-annotations { position: static; display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+            .chart-anno { position: static; transform: none; }
+        }
+    
+
+        /* ── V2 OVERRIDES ────────────────────────────── */
+
+        /* Weniger Abstand Titel -> Chart, Chart groesser */
+        #projects .divider { margin-bottom: 20px; }
+        .chart-scrub-sticky {
+            top: 84px;
+            height: calc(100vh - 110px);
+            align-items: flex-start;
+        }
+        .chart-container { padding: 32px; }
+        .chart-annotations { inset: 32px; }
+        .time-series-chart { aspect-ratio: 16 / 8; }
+        .anno-card { width: 230px; }
+
+        /* Kachel 04 seitlich links vom Punkt -> keine Ueberlappung mit 03 */
+        .chart-anno.side-left .anno-card {
+            left: auto; right: 26px;
+            bottom: auto; top: 50%;
+            transform: translateY(calc(-50% + 14px)) scale(0.92);
+        }
+        .chart-anno.side-left.visible .anno-card {
+            opacity: 1;
+            transform: translateY(-50%) scale(1);
+        }
+
+        /* Pixel-T lebt jetzt IN der Dual-Student-Kachel */
+        .exp-card-v2 { position: relative; overflow: hidden; }
+        .exp-card-v2::after { inset: 0; }
+        .exp-card-v2 > *:not(.pixel-t-scene) { position: relative; z-index: 1; }
+        .exp-card-v2 .pixel-t-scene {
+            justify-content: flex-end;
+            padding-right: 5%;
+        }
+        .exp-card-v2 .pixel-t { --px: 20px; }
+
+        @media (max-width: 1024px) {
+            .exp-card-v2 .pixel-t { --px: 16px; }
+        }
+        @media (max-width: 768px) {
+            .exp-card-v2 .pixel-t { --px: 12px; }
+            .exp-card-v2 .pixel-t-scene { justify-content: flex-end; padding-right: 8px; }
+            .chart-anno.side-left .anno-card {
+                position: static;
+                transform: translateY(20px) scale(0.97);
+            }
+            .chart-anno.side-left.visible .anno-card { transform: none; }
+        }
+    
+
+        /* ── V3 OVERRIDES ────────────────────────────── */
+
+        /* Sticky enthaelt jetzt den Titel; Hoehe = Inhalt (kein Leerraum mehr) */
+        #projects { padding-bottom: 60px; }
+        .chart-scrub-wrap { height: 220vh; }
+        .chart-scrub-sticky {
+            position: sticky;
+            top: 84px;
+            height: auto;
+            display: block;
+        }
+
+        /* viewBox 1000x460 passt exakt zum Element -> kein Letterboxing */
+        .time-series-chart { aspect-ratio: 1000 / 460; }
+
+        /* Anker-Punkte im SVG: Pop-in synchron zu den Kacheln */
+        .chart-anchor {
+            opacity: 0;
+            transform: scale(0);
+            transform-box: fill-box;
+            transform-origin: center;
+            transition: opacity 0.3s ease, transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .chart-anchor.on { opacity: 1; transform: scale(1); }
+
+        /* HTML-Dots sind Geschichte */
+        .anno-dot { display: none !important; }
+
+        /* Kleinere Viewport-Hoehen: Titel kompakter, damit alles sticky passt */
+        @media (max-height: 860px) {
+            #projects .section-heading { font-size: clamp(1.8rem, 4vw, 2.6rem); margin-bottom: 16px; }
+            #projects .divider { margin-bottom: 14px; }
+            .chart-scrub-sticky { top: 74px; }
+        }
+    
+
+        /* ── V4 OVERRIDES ────────────────────────────── */
+
+        /* Hero: zwei CTAs */
+        .hero-cta-row { display: flex; gap: 16px; flex-wrap: wrap; }
+        .hero-cta.solid { background: var(--magenta); border-color: var(--magenta); }
+        .hero-cta.solid::before { display: none; }
+        .hero-cta.solid:hover {
+            box-shadow: 0 0 26px var(--magenta-glow);
+            transform: translateY(-2px);
+        }
+
+        /* Nav: Social-Icons rechts neben den Links */
+        .nav-right { display: flex; align-items: center; gap: 26px; }
+        .nav-social { display: flex; align-items: center; gap: 14px; }
+        .nav-social a { color: var(--text-muted); display: flex; transition: color 0.3s ease, transform 0.3s ease; }
+        .nav-social a:hover { color: var(--magenta); transform: translateY(-1px); }
+        .nav-social svg { width: 17px; height: 17px; fill: currentColor; }
+
+        /* Zertifikate: Badge fuer interne Zertifikate */
+        .cert-internal {
+            display: inline-block;
+            margin-top: 10px;
+            margin-left: 8px;
+            font-size: 0.7em;
+            padding: 3px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+
+        /* Scrub-Indikator */
+        .scrub-ui { display: flex; align-items: center; gap: 14px; width: 100%; margin-top: 18px; }
+        .scrub-hint {
+            font-size: 0.62em;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            transition: opacity 0.4s ease;
+            white-space: nowrap;
+        }
+        .scrub-track {
+            flex: 1;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .scrub-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--magenta);
+            box-shadow: 0 0 8px var(--magenta-glow);
+        }
+
+        @media (max-width: 768px) {
+            .nav-social { display: none; }
+            .nav-right { gap: 0; }
+        }
+        @media print {
+            .scrub-ui, .nav-social { display: none !important; }
+        }
+    
     </style>
 </head>
 <body>
@@ -1243,6 +1707,7 @@
 <!-- Nav -->
 <nav>
     <div class="nav-name">Hong<span>.</span>Ting</div>
+    <div class="nav-right">
     <ul class="nav-links">
         <li><a href="https://hongtingchen.github.io/#about">About</a></li>
         <li><a href="https://hongtingchen.github.io/#experience">Experience</a></li>
@@ -1251,16 +1716,27 @@
         <li><a href="https://hongtingchen.github.io/#education">Education</a></li>
         <li><a href="https://hongtingchen.github.io/#contact">Contact</a></li>
     </ul>
+    <div class="nav-social">
+        <a href="https://www.linkedin.com/in/hong-ting-chen/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zM8.34 18.34V9.75H5.67v8.59h2.67zM7 8.48a1.55 1.55 0 1 0 0-3.1 1.55 1.55 0 0 0 0 3.1zm11.34 9.86v-4.71c0-2.53-1.35-3.71-3.15-3.71a2.72 2.72 0 0 0-2.47 1.36V9.75h-2.67v8.59h2.67v-4.79c0-1.13.61-1.86 1.61-1.86s1.34.73 1.34 1.86v4.79h2.67z"/></svg></a>
+            </div>
+    </div>
 </nav>
 
 <!-- ═══ HERO ═══ -->
 <div class="hero">
     <h1 class="hero-name hero-enter d2" id="hero-name-scrambler" data-text="Hong-Ting Chen">Hong-Ting<br><span class="accent">Chen</span></h1>
-    <p class="hero-sub hero-enter d3">Dual Student · Data Analyst · Telekom Deutschland</p>
-    <a href="https://hongtingchen.github.io/#experience" class="hero-cta hero-enter d4">
-        Experience
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17l9.2-9.2M17 17V7H7"></path></svg>
-    </a>
+    <p class="hero-sub hero-enter d3">Data Analyst @ Telekom Deutschland · B.A. Business Administration</p>
+    <div class="hero-cta-row hero-enter d4">
+        <!-- TODO: PDF unter cv/Hong-Ting-Chen-CV.pdf im GitHub-Pages-Repo ablegen -->
+        <a href="cv/Hong-Ting-Chen-CV.pdf" download class="hero-cta solid">
+            Download CV
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"></path></svg>
+        </a>
+        <a href="https://hongtingchen.github.io/#experience" class="hero-cta">
+            Experience
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17l9.2-9.2M17 17V7H7"></path></svg>
+        </a>
+    </div>
 </div>
 
 <!-- ═══ MARQUEE ═══ -->
@@ -1272,7 +1748,7 @@
         <span class="marquee-item">Python<span class="dot"></span></span>
         <span class="marquee-item">Machine Learning<span class="dot"></span></span>
         <span class="marquee-item">VBA<span class="dot"></span></span>
-        <span class="marquee-item">Controlling<span class="dot"></span></span>
+        <span class="marquee-item">Data Analytics<span class="dot"></span></span>
         <span class="marquee-item">ESG Reporting<span class="dot"></span></span>
         <span class="marquee-item">Prompt Engineering<span class="dot"></span></span>
         <span class="marquee-item">SAP Analytics Cloud<span class="dot"></span></span>
@@ -1280,7 +1756,7 @@
         <span class="marquee-item">Python<span class="dot"></span></span>
         <span class="marquee-item">Machine Learning<span class="dot"></span></span>
         <span class="marquee-item">VBA<span class="dot"></span></span>
-        <span class="marquee-item">Controlling<span class="dot"></span></span>
+        <span class="marquee-item">Quantitative Finance<span class="dot"></span></span>
         <span class="marquee-item">ESG Reporting<span class="dot"></span></span>
     </div>
 </div>
@@ -1288,7 +1764,7 @@
 <!-- ═══ ABOUT ═══ -->
 <section id="about">
     <div class="section-label reveal">About</div>
-    <h2 class="section-heading reveal stagger-1">Dual Student with a Passion for <em>Data, AI &amp; Controlling</em></h2>
+    <h2 class="section-heading reveal stagger-1">Dual Student with a Passion for <em>Data, AI &amp; Analytics</em></h2>
     <div class="divider reveal stagger-2"></div>
     <div class="photo-section">
         <div class="photo-card-wrapper">
@@ -1298,9 +1774,9 @@
             </div>
         </div>
         <p class="photo-bio reveal stagger-3">
-            I'm currently studying Business Administration at FOM University and working as a dual student in Controlling as a Data Analyst
-            at Telekom Deutschland GmbH. I have experience in data analysis, AI-driven automation, and
-            ESG reporting, and I'm passionate about optimizing complex business processes with modern tools.
+            Data Analyst in Controlling at Telekom Deutschland GmbH and Business Administration
+            student at FOM. I turn manual finance processes into automated
+            workflows. Currently writing my bachelor thesis on statistical arbitrage in high-frequency markets.
         </p>
     </div>
 </section>
@@ -1312,19 +1788,20 @@
     <div class="divider reveal stagger-2"></div>
     <div class="exp-grid">
         <div class="exp-card-v2 reveal stagger-3">
+            <div class="pixel-t-scene" aria-hidden="true"><div class="pixel-t" id="pixelT"></div></div>
             <div class="exp-top-v2">
-                <span class="exp-company-v2">Dual Student – Controlling</span>
+                <span class="exp-company-v2">Dual Student – Data Analyst</span>
                 <span class="exp-badge-v2">09/2023 – Today</span>
             </div>
             <div class="exp-role-v2">Telekom Deutschland GmbH</div>
             <ul class="exp-list-v2">
-                <li>Creation of ETL processing logic in Excel using VBA for automatic data extraction, processing, and visualization</li>
-                <li>Automation of scheduling through Python scripting for ICS file generation</li>
-                <li>Execution of monthly closing processes</li>
-                <li>Development and maintenance of data models and stories in SAP Analytics Cloud and Power BI</li>
-                <li>Conception and moderation of workshops on Generative AI</li>
-                <li>Support in creating ESG quarterly reports for management</li>
-                <li>Support in consolidating and validating ESG forecasting and planning</li>
+                <li>Developed automated ETL pipeline in Excel/VBA to replace recurring manual reporting steps</li>
+                <li>Created Financial-Reports for the Management</li>
+                <li>Build and maintain management dashboards and data models in SAP Analytics Cloud and Power BI</li>
+                <li>Designed and moderated internal workshops on Generative AI, driving AI adoption across the department</li>
+                <li>Prepare quarterly ESG reports for senior management</li>
+		<li>Automation and Optimization of recurring processes</li>
+                <li>Consolidate and validate ESG forecasting and planning data across business units</li>
             </ul>
         </div>
     </div>
@@ -1332,105 +1809,105 @@
 
 <!-- ═══ PROJECTS ═══ -->
 <section id="projects">
-    <div class="section-label reveal">Projects</div>
-    <h2 class="section-heading reveal stagger-1">Quantitative <em>Finance</em></h2>
-    <div class="divider reveal stagger-2"></div>
-    
-    <div class="projects-container">
-        <div class="project-chart reveal stagger-3">
+    <div class="chart-scrub-wrap">
+        <div class="chart-scrub-sticky">
+            <div class="section-label reveal">Projects</div>
+            <h2 class="section-heading reveal stagger-1">Quantitative <em>Finance</em></h2>
+            <div class="divider reveal stagger-2"></div>
+
             <div class="chart-container">
-                <svg class="time-series-chart" viewBox="0 0 1000 300" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Background grid -->
+                <svg class="time-series-chart" viewBox="0 0 1000 460" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <linearGradient id="chartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
                             <stop offset="0%" style="stop-color: rgba(226, 0, 116, 0.3); stop-opacity: 1" />
                             <stop offset="100%" style="stop-color: rgba(226, 0, 116, 0.05); stop-opacity: 1" />
                         </linearGradient>
                     </defs>
-                    
-                    <!-- Grid lines -->
+
                     <g class="grid" opacity="0.1">
-                        <line x1="0" y1="75" x2="1000" y2="75" stroke="white" stroke-width="1"/>
-                        <line x1="0" y1="112" x2="1000" y2="112" stroke="white" stroke-width="1"/>
-                        <line x1="0" y1="150" x2="1000" y2="150" stroke="white" stroke-width="1"/>
-                        <line x1="0" y1="188" x2="1000" y2="188" stroke="white" stroke-width="1"/>
-                        <line x1="0" y1="225" x2="1000" y2="225" stroke="white" stroke-width="1"/>
+                        <line x1="0" y1="118" x2="1000" y2="118" stroke="white" stroke-width="1"/>
+                        <line x1="0" y1="178" x2="1000" y2="178" stroke="white" stroke-width="1"/>
+                        <line x1="0" y1="239" x2="1000" y2="239" stroke="white" stroke-width="1"/>
+                        <line x1="0" y1="300" x2="1000" y2="300" stroke="white" stroke-width="1"/>
+                        <line x1="0" y1="360" x2="1000" y2="360" stroke="white" stroke-width="1"/>
                     </g>
-                    
-                    <!-- Axes -->
-                    <line x1="50" y1="250" x2="950" y2="250" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
-                    <line x1="50" y1="20" x2="50" y2="250" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
-                    
-                    <!-- Data area (filled path) -->
-                    <path class="chart-fill" d="M 50 250 L 120 200 L 190 180 L 260 210 L 330 160 L 400 140 L 470 120 L 540 100 L 610 80 L 680 70 L 750 90 L 820 60 L 890 40 L 950 30 L 950 250 Z" fill="url(#chartGradient)" opacity="0" style="transition: opacity 0.8s ease-out;"/>
-                    
-                    <!-- Data line with animated effect -->
-                    <polyline class="chart-line" points="50 250 120 200 190 180 260 210 330 160 400 140 470 120 540 100 610 80 680 70 750 90 820 60 890 40 950 30" 
-                              fill="none" stroke="#E20074" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="0" style="transition: opacity 0.8s ease-out 0.2s;"/>
-                    
-                    <!-- Data points -->
-                    <g class="chart-points" opacity="0" style="transition: opacity 0.8s ease-out 0.4s;">
-                        <circle cx="120" cy="200" r="6" fill="#E20074" opacity="0.6"/>
-                        <circle cx="190" cy="180" r="6" fill="#E20074" opacity="0.6"/>
-                        <circle cx="260" cy="210" r="6" fill="#E20074" opacity="0.6"/>
-                        <circle cx="330" cy="160" r="6" fill="#E20074" opacity="0.6"/>
-                        <circle cx="400" cy="140" r="6" fill="#E20074" opacity="0.6"/>
-                        <circle cx="470" cy="120" r="6" fill="#E20074" opacity="0.6"/>
-                        <circle cx="540" cy="100" r="6" fill="#E20074" opacity="0.6"/>
-                        <circle cx="610" cy="80" r="6" fill="#E20074" opacity="0.6"/>
-                        <circle cx="680" cy="70" r="6" fill="#E20074" opacity="0.6"/>
-                        <circle cx="750" cy="90" r="6" fill="#E20074" opacity="0.6"/>
-                        <circle cx="820" cy="60" r="6" fill="#E20074" opacity="0.6"/>
-                        <circle cx="890" cy="40" r="6" fill="#E20074" opacity="0.6"/>
-                        <circle cx="950" cy="30" r="6" fill="#E20074" opacity="0.8"/>
+
+                    <line x1="50" y1="400" x2="950" y2="400" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+                    <line x1="50" y1="30" x2="50" y2="400" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+
+                    <path class="chart-fill" d="M 50 400 L 120 320 L 190 287 L 260 336 L 330 255 L 400 223 L 470 191 L 540 159 L 610 126 L 680 110 L 750 143 L 820 94 L 890 62 L 950 46 L 950 400 Z" fill="url(#chartGradient)" opacity="0"/>
+
+                    <polyline class="chart-line" points="50 400 120 320 190 287 260 336 330 255 400 223 470 191 540 159 610 126 680 110 750 143 820 94 890 62 950 46"
+                              fill="none" stroke="#E20074" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="0"/>
+
+                    <g class="chart-points" opacity="0">
+                        <circle cx="120" cy="320" r="5" fill="#E20074" opacity="0.55"/>
+                        <circle cx="190" cy="287" r="5" fill="#E20074" opacity="0.55"/>
+                        <circle cx="330" cy="255" r="5" fill="#E20074" opacity="0.55"/>
+                        <circle cx="400" cy="223" r="5" fill="#E20074" opacity="0.55"/>
+                        <circle cx="540" cy="159" r="5" fill="#E20074" opacity="0.55"/>
+                        <circle cx="610" cy="126" r="5" fill="#E20074" opacity="0.55"/>
+                        <circle cx="750" cy="143" r="5" fill="#E20074" opacity="0.55"/>
+                        <circle cx="820" cy="94" r="5" fill="#E20074" opacity="0.55"/>
+                        <circle cx="950" cy="46" r="5" fill="#E20074" opacity="0.8"/>
+                    </g>
+
+                    <!-- Anker-Punkte der 4 Meilensteine: liegen exakt AUF der Linie -->
+                    <g class="chart-anchor">
+                        <circle cx="260" cy="336" r="13" fill="none" stroke="rgba(226,0,116,0.45)" stroke-width="2"/>
+                        <circle cx="260" cy="336" r="7" fill="#E20074"/>
+                    </g>
+                    <g class="chart-anchor">
+                        <circle cx="470" cy="191" r="13" fill="none" stroke="rgba(226,0,116,0.45)" stroke-width="2"/>
+                        <circle cx="470" cy="191" r="7" fill="#E20074"/>
+                    </g>
+                    <g class="chart-anchor">
+                        <circle cx="680" cy="110" r="13" fill="none" stroke="rgba(226,0,116,0.45)" stroke-width="2"/>
+                        <circle cx="680" cy="110" r="7" fill="#E20074"/>
+                    </g>
+                    <g class="chart-anchor">
+                        <circle cx="890" cy="62" r="13" fill="none" stroke="rgba(226,0,116,0.45)" stroke-width="2"/>
+                        <circle cx="890" cy="62" r="7" fill="#E20074"/>
                     </g>
                 </svg>
-            </div>
-        </div>
 
-        <div class="project-content reveal stagger-4">
-            <div class="projects-grid">
-                <div class="project-card-v2">
-                    <div class="project-card-top">
-                        <span class="project-card-title">Bachelor Thesis</span>
+                <div class="scrub-ui" aria-hidden="true">
+                    <span class="scrub-hint" id="scrubHint">Scroll</span>
+                    <div class="scrub-track"><div class="scrub-fill" id="scrubFill"></div></div>
+                </div>
+
+                <div class="chart-annotations">
+                    <div class="chart-anno" style="--ax: 26%; --ay: 73%;">
+                        <div class="anno-card">
+                            <span class="anno-index">01</span>
+                            <div class="anno-title">Bachelor Thesis</div>
+                            <p class="anno-text">Statistical arbitrage in market microstructures &ndash; analysing high-frequency Level 2 tick data across spot and futures markets.</p>
                         </div>
-                        <div class="project-card-subtitle">Statistical Arbitrage in Market Microstructures</div>
-                        <div class="project-card-description">
-                            Comprehensive analysis of high-frequency Level 2 tick exchange data to identify arbitrage opportunities between spot and futures markets.
                     </div>
-                </div>
 
-                <div class="project-card-v2">
-                    <div class="project-card-top">
-                        <span class="project-card-title">2. Data Analysis &amp; Processing</span>
+                    <div class="chart-anno" style="--ax: 47%; --ay: 41.5%;">
+                        <div class="anno-card">
+                            <span class="anno-index">02</span>
+                            <div class="anno-title">Data Analysis &amp; Processing</div>
+                            <p class="anno-text">Structuring Level 2 tick data with Apache Parquet &amp; PyArrow and harmonising spot and futures market feeds.</p>
                         </div>
-                        <ul class="project-list-v2">
-                            <li>Analysis of high-frequency Level 2 tick data</li>
-                            <li>Apache Parquet data structuring with PyArrow</li>
-                            <li>Spot and futures market data harmonization</li>
-                    </ul>
-                </div>
+                    </div>
 
-                <div class="project-card-v2">
-                    <div class="project-card-top">
-                        <span class="project-card-title">3. Statistical Methods</span>
+                    <div class="chart-anno below" style="--ax: 69%; --ay: 24%;">
+                        <div class="anno-card">
+                            <span class="anno-index">03</span>
+                            <div class="anno-title">Statistical Methods</div>
+                            <p class="anno-text">Kalman filtering of noisy exchange data and Hidden Markov Model regime classification of market microstructures.</p>
                         </div>
-                        <ul class="project-list-v2">
-                            <li>Kalman Filter for smoothing noisy exchange data</li>
-                            <li>Hidden Markov Model for regime classification</li>
-                            <li>Investigation of market microstructures</li>
-                    </ul>
-                </div>
+                    </div>
 
-                <div class="project-card-v2">
-                    <div class="project-card-top">
-                        <span class="project-card-title">4. Strategy Development</span>
+                    <div class="chart-anno side-left" style="--ax: 89%; --ay: 13.5%;">
+                        <div class="anno-card">
+                            <span class="anno-index">04</span>
+                            <div class="anno-title">Strategy Development</div>
+                            <p class="anno-text">Ornstein-Uhlenbeck modelling and mean-reversion strategy design to identify arbitrage windows.</p>
                         </div>
-                        <ul class="project-list-v2">
-                            <li>Ornstein-Uhlenbeck Model implementation</li>
-                            <li>Mean-Reversion strategy conception</li>
-                            <li>Identification of arbitrage opportunities</li>
-                    </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1442,37 +1919,65 @@
     <div class="section-label reveal">Certifications</div>
     <h2 class="section-heading reveal stagger-1">Proven <em>Expertise</em></h2>
     <div class="divider reveal stagger-2"></div>
-    <div class="cert-grid">
-        <div class="cert-card reveal stagger-3">
-            <div class="cert-name">Advanced Prompting</div>
-            <div class="cert-issuer">Deutsche Telekom AG</div>
-            <span class="cert-year">2026</span>
+    <div class="cert-timeline">
+        <div class="cert-axis"><div class="cert-axis-fill" id="certAxisFill"></div></div>
+
+        <div class="cert-item left">
+            <div class="cert-card">
+                <div class="cert-name">Advanced Prompting</div>
+                <div class="cert-issuer">Deutsche Telekom AG</div>
+                <span class="cert-year">2026</span>
+                <span class="cert-internal">Internal certification</span>
+            </div>
+            <div class="cert-node"></div>
+            <div class="cert-axis-year">2026</div>
         </div>
-        <div class="cert-card reveal stagger-4">
-            <div class="cert-name">Data Analytics &amp; Visualization with Power BI</div>
-            <div class="cert-issuer">Deutsche Telekom AG</div>
-            <span class="cert-year">2025</span>
+
+        <div class="cert-item right">
+            <div class="cert-axis-year">2025</div>
+            <div class="cert-node"></div>
+            <div class="cert-card">
+                <div class="cert-name">Data Analytics &amp; Visualization with Power BI</div>
+                <div class="cert-issuer">Deutsche Telekom AG</div>
+                <span class="cert-year">2025</span>
+                <span class="cert-internal">Internal certification</span>
+            </div>
         </div>
-        <div class="cert-card reveal stagger-5">
-            <div class="cert-name">Supervised Machine Learning: Regression and Classification</div>
-            <div class="cert-issuer">Stanford Online &amp; DeepLearning.AI (Coursera)</div>
-            <span class="cert-year">2025</span>
-            <br>
-            <a href="https://www.coursera.org/account/accomplishments/verify/DGHPF4IRMDA4" target="_blank" rel="noopener" class="cert-button">View Certificate</a>
+
+        <div class="cert-item left">
+            <div class="cert-card">
+                <div class="cert-name">Supervised Machine Learning: Regression and Classification</div>
+                <div class="cert-issuer">Stanford Online &amp; DeepLearning.AI (Coursera)</div>
+                <span class="cert-year">2025</span>
+                <br>
+                <a href="https://www.coursera.org/account/accomplishments/verify/DGHPF4IRMDA4" target="_blank" rel="noopener" class="cert-button">View Certificate</a>
+            </div>
+            <div class="cert-node"></div>
+            <div class="cert-axis-year">2025</div>
         </div>
-        <div class="cert-card reveal stagger-6">
-            <div class="cert-name">Prompt Engineering for ChatGPT</div>
-            <div class="cert-issuer">Vanderbilt University (Coursera)</div>
-            <span class="cert-year">2024</span>
-            <br>
-            <a href="https://www.coursera.org/account/accomplishments/verify/RLPC9M4VR423" target="_blank" rel="noopener" class="cert-button">View Certificate</a>
+
+        <div class="cert-item right">
+            <div class="cert-axis-year">2024</div>
+            <div class="cert-node"></div>
+            <div class="cert-card">
+                <div class="cert-name">Prompt Engineering for ChatGPT</div>
+                <div class="cert-issuer">Vanderbilt University (Coursera)</div>
+                <span class="cert-year">2024</span>
+                <br>
+                <a href="https://www.coursera.org/account/accomplishments/verify/RLPC9M4VR423" target="_blank" rel="noopener" class="cert-button">View Certificate</a>
+            </div>
         </div>
-        <div class="cert-card reveal stagger-7">
-            <div class="cert-name">Foundations of Project Management</div>
-            <div class="cert-issuer">Google (Coursera)</div>
-            <span class="cert-year">2024</span>
-            <br>
-            <a href="https://www.coursera.org/account/accomplishments/verify/842QXB08O93N" target="_blank" rel="noopener" class="cert-button">View Certificate</a>
+
+        <div class="cert-item left">
+            <div class="cert-card">
+                <div class="cert-name">Foundations of Project Management</div>
+                <div class="cert-issuer">Google (Coursera)</div>
+                <span class="cert-year">2024</span>
+                <br>
+                <a href="https://www.coursera.org/account/accomplishments/verify/842QXB08O93N" target="_blank" rel="noopener" class="cert-button">View Certificate</a>
+            </div>
+            <div class="cert-node"></div>
+            <div class="cert-axis-year">2024</div>
         </div>
     </div>
 </section>
@@ -1486,24 +1991,24 @@
         <div class="skill-category reveal stagger-3">
             <div class="skill-cat-title">AI &amp; Development</div>
             <div class="skill-pills-v2">
-                <span class="pill-v2 expert">Prompt Engineering<span class="lvl"> · Advanced</span></span>
-                <span class="pill-v2">Python<span class="lvl"> · Good Knowledge</span></span>
-                <span class="pill-v2">Machine Learning<span class="lvl"> · Good Knowledge</span></span>
+                <span class="pill-v2 expert">Prompt Engineering</span>
+                <span class="pill-v2">Python</span>
+                <span class="pill-v2">Machine Learning</span>
             </div>
         </div>
         <div class="skill-category reveal stagger-4">
             <div class="skill-cat-title">Data &amp; Analytics</div>
             <div class="skill-pills-v2">
-                <span class="pill-v2 expert">SAP Analytics Cloud<span class="lvl"> · Advanced</span></span>
-                <span class="pill-v2 expert">Power BI<span class="lvl"> · Advanced</span></span>
-                <span class="pill-v2">VBA<span class="lvl"> · Good Knowledge</span></span>
+                <span class="pill-v2 expert">SAP Analytics Cloud</span>
+                <span class="pill-v2 expert">Power BI</span>
+                <span class="pill-v2">VBA</span>
             </div>
         </div>
         <div class="skill-category reveal stagger-5">
             <div class="skill-cat-title">Business</div>
             <div class="skill-pills-v2">
-                <span class="pill-v2">Controlling<span class="lvl"> · Good Knowledge</span></span>
-                <span class="pill-v2">ESG<span class="lvl"> · Good Knowledge</span></span>
+                <span class="pill-v2">Controlling</span>
+                <span class="pill-v2">ESG</span>
             </div>
         </div>
     </div>
@@ -1557,10 +2062,10 @@
     <h2 class="section-heading reveal stagger-1">Let's <em>Connect</em></h2>
     <div class="divider reveal stagger-2"></div>
     <div class="contact-grid">
-        <div class="contact-item reveal stagger-3 interactive">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="#E20074" d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.46.57 3.58a1 1 0 0 1-.24 1.01l-2.2 2.2z"></path></svg>
-            <span>+49 176 76725301</span>
-        </div>
+        <a href="https://www.linkedin.com/in/hong-ting-chen/" target="_blank" rel="noopener" class="contact-item reveal stagger-3 interactive" style="text-decoration: none; color: inherit;">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="#E20074" d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zM8.34 18.34V9.75H5.67v8.59h2.67zM7 8.48a1.55 1.55 0 1 0 0-3.1 1.55 1.55 0 0 0 0 3.1zm11.34 9.86v-4.71c0-2.53-1.35-3.71-3.15-3.71a2.72 2.72 0 0 0-2.47 1.36V9.75h-2.67v8.59h2.67v-4.79c0-1.13.61-1.86 1.61-1.86s1.34.73 1.34 1.86v4.79h2.67z"/></svg>
+            <span>linkedin.com/in/hong-ting-chen</span>
+        </a>
         <div class="contact-item reveal stagger-4 interactive">
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="#E20074" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"></path></svg>
             <a href="mailto:hongchen2107@gmail.com" style="text-decoration: none; color: inherit;"><span>hongchen2107@gmail.com</span></a>
@@ -1770,71 +2275,150 @@
             new TiltCard(photoCardWrapper);
         }
 
-        // Scroll-based animations for chart, underline, and project cards
-        function updateScrollAnimations() {
-            const viewportHeight = window.innerHeight;
-            
-            // ═ CHART ANIMATION ═
-            const chartContainer = document.querySelector('.chart-container');
-            const timeSeriesChart = document.querySelector('.time-series-chart');
-            
-            if (chartContainer && timeSeriesChart) {
-                const rect = chartContainer.getBoundingClientRect();
-                const chartTop = rect.top;
-                const chartHeight = rect.height;
-                
-                // Start animating when chart enters viewport, stop at 25% below center
-                const animationStartPoint = viewportHeight + (chartHeight * 0.25) - (chartHeight / 2); // 25% above center
-                const animationEndPoint = viewportHeight - (chartHeight / 2) - (chartHeight * 0.90); // 90% below center
-                
-                let scrollProgress = 0;
-                if (chartTop <= animationStartPoint && chartTop > animationEndPoint) {
-                    scrollProgress = (animationStartPoint - chartTop) / (animationStartPoint - animationEndPoint);
-                    scrollProgress = Math.min(1, Math.max(0, scrollProgress));
-                } else if (chartTop <= animationEndPoint) {
-                    scrollProgress = 1;
+        // ═ PIXEL T BACKDROP (pseudo-3D, pure CSS layers) ═
+        (function buildPixelT() {
+            const t = document.getElementById('pixelT');
+            if (!t) return;
+
+            // T-Form auf 9x10-Raster: Balken oben (2 Reihen), Stamm mittig (3 Spalten)
+            const pixels = [];
+            for (let c = 0; c < 9; c++) { pixels.push([c, 0], [c, 1]); }
+            for (let r = 2; r < 10; r++) { for (let c = 3; c < 6; c++) pixels.push([c, r]); }
+
+            const layers = 6;
+            for (let i = 0; i < layers; i++) {
+                const layer = document.createElement('div');
+                layer.className = 'pixel-t-layer';
+                const depth = (i - (layers - 1) / 2) * 16;
+                layer.style.transform = 'translateZ(' + depth + 'px)';
+
+                const mix = i / (layers - 1); // 0 = hinten, 1 = vorne
+                const color = (i === layers - 1)
+                    ? '#E20074'
+                    : 'rgba(226,0,116,' + (0.22 + mix * 0.45).toFixed(2) + ')';
+
+                let shadows = pixels.map(([c, r]) =>
+                    'calc(var(--px) * ' + c + ') calc(var(--px) * ' + r + ') 0 0 ' + color);
+
+                if (i === layers - 1) { // Front-Layer bekommt Glow
+                    shadows = shadows.concat(pixels.map(([c, r]) =>
+                        'calc(var(--px) * ' + c + ') calc(var(--px) * ' + r + ') 20px 0 rgba(226,0,116,0.35)'));
                 }
-                
-                const fill = timeSeriesChart.querySelector('.chart-fill');
-                const line = timeSeriesChart.querySelector('.chart-line');
-                const points = timeSeriesChart.querySelector('.chart-points');
-                
-                if (fill) {
-                    fill.style.opacity = scrollProgress;
-                    fill.style.clipPath = `polygon(0 100%, ${scrollProgress * 100}% 0, ${scrollProgress * 100}% 100%, 0 100%)`;
-                }
-                
-                if (line) {
-                    line.style.opacity = scrollProgress;
-                    const dashOffset = 1500 * (1 - scrollProgress);
-                    line.style.strokeDashoffset = dashOffset;
-                }
-                
-                if (points) {
-                    points.style.opacity = scrollProgress;
-                }
+                layer.style.boxShadow = shadows.join(',');
+                t.appendChild(layer);
             }
-            
-            // ═ PROJECT CARDS ANIMATION ═
-            const projectCards = document.querySelectorAll('.project-card-v2');
-            projectCards.forEach((card, index) => {
-                const rect = card.getBoundingClientRect();
-                const cardTop = rect.top;
-                
-                // Trigger stagger based on index
-                const triggerPoint = viewportHeight + (index * 50);
-                
-                if (cardTop < triggerPoint) {
-                    card.classList.add('visible');
+        })();
+
+        // ═ SCROLL-DRIVEN ANIMATIONS ═
+        const expSection = document.querySelector('.exp-card-v2') || document.getElementById('experience');
+        const tScene = document.querySelector('.pixel-t-scene');
+        const scrubWrap = document.querySelector('.chart-scrub-wrap');
+        const chartLine = document.querySelector('.chart-line');
+        const chartFill = document.querySelector('.chart-fill');
+        const chartPoints = document.querySelector('.chart-points');
+        const chartAnnos = document.querySelectorAll('.chart-anno');
+        const chartAnchors = document.querySelectorAll('.chart-anchor');
+        const scrubSticky = document.querySelector('.chart-scrub-sticky');
+        const scrubFillEl = document.getElementById('scrubFill');
+        const scrubHintEl = document.getElementById('scrubHint');
+        const certTimeline = document.querySelector('.cert-timeline');
+        const certAxisFill = document.getElementById('certAxisFill');
+        const certItems = document.querySelectorAll('.cert-item');
+        const annoThresholds = [0.18, 0.38, 0.58, 0.78];
+        const mobileQuery = window.matchMedia('(max-width: 768px)');
+
+        function updateScrollAnimations() {
+            const vh = window.innerHeight;
+
+            // ═ PIXEL T: smooth fade in/out mit Sektions-Sichtbarkeit ═
+            // ═ PIXEL T: smooth fade in/out mit Sektions-Sichtbarkeit ═
+		if (expSection && tScene) {
+    		const r = expSection.getBoundingClientRect();
+    
+    		// Offset in pixels. Increase this number to reveal the 'T' even later.
+    		const revealDelay = 125; 
+    
+    		// Add the delay to r.top so the fade-in waits for further scrolling
+    		const visible = Math.min(r.bottom, vh) - Math.max(r.top + revealDelay, 0);
+    		const ratio = Math.max(0, Math.min(1, visible / Math.min(r.height, vh)));
+    
+    		tScene.style.opacity = (ratio * ratio * 1.5).toFixed(3); // eased edges
+		}
+
+            // ═ CHART: scroll-gekoppeltes Scrubbing (vor & zurück) ═
+            if (scrubWrap && scrubSticky) {
+                const wr = scrubWrap.getBoundingClientRect();
+                const stickyH = scrubSticky.offsetHeight;
+                const topOffset = 84;
+                let progress;
+                if (!mobileQuery.matches && wr.height > stickyH + 1) {
+                    // 0 = Moment des Anpinnens (Titel voll sichtbar), 1 = Ende der Pin-Phase
+                    progress = (topOffset - wr.top) / (wr.height - stickyH);
                 } else {
-                    card.classList.remove('visible');
+                    progress = (vh - wr.top) / (vh * 0.9);
                 }
-            });
+                progress = Math.max(0, Math.min(1, progress));
+
+                const draw = Math.min(1, progress / 0.85);
+                if (chartFill) {
+                    chartFill.style.opacity = draw;
+                    chartFill.style.clipPath = 'polygon(0 0, ' + (draw * 100) + '% 0, ' + (draw * 100) + '% 100%, 0 100%)';
+                }
+                if (chartLine) {
+                    chartLine.style.opacity = draw > 0 ? 1 : 0;
+                    chartLine.style.strokeDashoffset = 1500 * (1 - draw);
+                }
+                if (chartPoints) chartPoints.style.opacity = draw;
+
+                chartAnnos.forEach((a, i) =>
+                    a.classList.toggle('visible', progress >= annoThresholds[i]));
+                chartAnchors.forEach((a, i) =>
+                    a.classList.toggle('on', progress >= annoThresholds[i]));
+
+                if (scrubFillEl) scrubFillEl.style.width = (progress * 100) + '%';
+                if (scrubHintEl) scrubHintEl.style.opacity = progress >= 0.97 ? 0 : 1;
+            }
+
+            // ═ CERT TIMELINE: scroll-gekoppelter Zahlenstrahl (vor & zurück) ═
+            if (certTimeline && certAxisFill) {
+                const tr = certTimeline.getBoundingClientRect();
+                // Referenzlinie bei 72% der Viewport-Höhe: Füllstand = wie weit
+                // die Timeline diese Linie bereits passiert hat
+                const refLine = vh * 0.72;
+                let certProgress = (refLine - tr.top) / tr.height;
+                certProgress = Math.max(0, Math.min(1, certProgress));
+
+                certAxisFill.style.height = (certProgress * 100) + '%';
+
+                // Ein Item wird sichtbar, sobald die Füll-Linie seinen Punkt erreicht
+                const fillY = tr.top + certProgress * tr.height;
+                certItems.forEach(item => {
+                    const node = item.querySelector('.cert-node');
+                    const nr = (node || item).getBoundingClientRect();
+                    const nodeCenter = nr.top + nr.height / 2;
+                    item.classList.toggle('visible', fillY >= nodeCenter - 4);
+                });
+            }
         }
 
-        // Run on load and scroll
+        // ═ ACTIVE NAV HIGHLIGHT ═
+        const navLinks = document.querySelectorAll('.nav-links a');
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                const id = entry.target.id;
+                navLinks.forEach(l => {
+                    const hash = (l.getAttribute('href') || '').split('#')[1];
+                    l.classList.toggle('active', hash === id);
+                });
+            });
+        }, { rootMargin: '-40% 0px -55% 0px' });
+        document.querySelectorAll('section[id]').forEach(s => sectionObserver.observe(s));
+
+        // Run on load, scroll and resize
         window.addEventListener('load', updateScrollAnimations);
         window.addEventListener('scroll', updateScrollAnimations, { passive: true });
+        window.addEventListener('resize', updateScrollAnimations);
 
         // ═ SCROLL-BASED REVEAL FOR ALL ELEMENTS ═
         function updateRevealElements() {
