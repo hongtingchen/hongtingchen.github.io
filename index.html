@@ -862,6 +862,36 @@
         }
 
         /* ── SKILLS ──────────────────────────────────── */
+        .skills-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 22px;
+            align-items: center;
+            margin: -4px 0 30px;
+            font-size: 0.72em;
+            color: var(--text-muted);
+        }
+
+        .skills-legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .skills-legend-swatch {
+            width: 26px;
+            height: 12px;
+            border-radius: 999px;
+            background: rgba(226, 0, 116, 0.06);
+            border: 1px solid rgba(226, 0, 116, 0.15);
+        }
+
+        .skills-legend-swatch.advanced {
+            background: rgba(226, 0, 116, 0.15);
+            border-color: rgba(226, 0, 116, 0.35);
+            box-shadow: 0 0 12px rgba(226, 0, 116, 0.08);
+        }
+
         .skills-section { display: flex; flex-direction: column; gap: 40px; }
 
         .skill-category {
@@ -887,6 +917,7 @@
         }
 
         .pill-v2 {
+            position: relative;
             display: inline-flex;
             align-items: center;
             padding: 8px 20px;
@@ -896,7 +927,69 @@
             background: rgba(226, 0, 116, 0.06);
             border: 1px solid rgba(226, 0, 116, 0.15);
             color: var(--text-secondary);
+            cursor: help;
             transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .pill-v2::before,
+        .pill-v2::after {
+            position: absolute;
+            left: 50%;
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+            z-index: 20;
+        }
+
+        .pill-v2::after {
+            content: attr(data-level);
+            bottom: calc(100% + 11px);
+            transform: translate(-50%, 5px);
+            white-space: nowrap;
+            padding: 7px 10px;
+            border-radius: 7px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #1b1b1b;
+            color: var(--white-pure);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.32);
+            font-size: 0.74rem;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+        }
+
+        .pill-v2::before {
+            content: '';
+            bottom: calc(100% + 5px);
+            width: 8px;
+            height: 8px;
+            background: #1b1b1b;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transform: translate(-50%, 3px) rotate(45deg);
+        }
+
+        .pill-v2:hover::before,
+        .pill-v2:hover::after,
+        .pill-v2:focus-visible::before,
+        .pill-v2:focus-visible::after {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .pill-v2:hover::after,
+        .pill-v2:focus-visible::after {
+            transform: translate(-50%, 0);
+        }
+
+        .pill-v2:hover::before,
+        .pill-v2:focus-visible::before {
+            transform: translate(-50%, 0) rotate(45deg);
+        }
+
+        .pill-v2:focus-visible {
+            outline: 2px solid rgba(226, 0, 116, 0.72);
+            outline-offset: 3px;
         }
 
         .pill-v2:hover {
@@ -1693,6 +1786,291 @@
             .scrub-ui, .nav-social { display: none !important; }
         }
     
+
+
+        /* ── V6 EXPERIENCE TIMELINE + EXPANDABLE DETAILS ───────── */
+        #experience .divider { margin-bottom: 34px; }
+        #experience .exp-grid { display: block; }
+
+        /* Professional Journey: timeline stays on the left; every card sits on the right. */
+        .exp-timeline {
+            position: relative;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 18px 0 34px;
+        }
+
+        .exp-timeline-axis {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 22px;
+            width: 2px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .exp-axis-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 0%;
+            background: linear-gradient(180deg, var(--magenta), rgba(226, 0, 116, 0.5));
+            box-shadow: 0 0 12px var(--magenta-glow);
+            border-radius: 2px;
+            will-change: height;
+        }
+
+        .exp-timeline-item {
+            position: relative;
+            display: grid;
+            grid-template-columns: 44px 118px minmax(0, 1fr);
+            align-items: start;
+            margin-bottom: 54px;
+        }
+        .exp-timeline-item:last-child { margin-bottom: 0; }
+
+        .exp-node {
+            grid-column: 1;
+            grid-row: 1;
+            justify-self: center;
+            margin-top: 31px;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            z-index: 4;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .exp-axis-date {
+            grid-column: 2;
+            grid-row: 1;
+            justify-self: start;
+            padding-top: 28px;
+            padding-left: 12px;
+            font-size: 0.82em;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            opacity: 0;
+            transform: translateX(-14px);
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                        transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                        color 0.6s ease;
+        }
+
+        .exp-timeline-item .exp-card-v2 {
+            grid-column: 3;
+            grid-row: 1;
+            opacity: 0;
+            min-width: 0;
+            transform: translateX(32px);
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                        transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                        background 0.4s ease,
+                        border-color 0.4s ease,
+                        border-left-width 0.4s ease,
+                        box-shadow 0.4s ease;
+        }
+
+        .exp-timeline-item.visible .exp-card-v2,
+        .exp-timeline-item.visible .exp-axis-date {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .exp-timeline-item.visible .exp-axis-date { color: var(--magenta); }
+        .exp-timeline-item.visible .exp-node {
+            background: var(--magenta);
+            border-color: var(--magenta);
+            box-shadow: 0 0 16px var(--magenta-glow);
+            transform: scale(1.16);
+        }
+
+        .exp-timeline-item.visible .exp-card-v2:hover { transform: translateY(-3px); }
+
+        /* Expandable measurable-result details */
+        .exp-details-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 18px;
+            padding: 9px 16px;
+            border: 1px solid rgba(226, 0, 116, 0.32);
+            border-radius: 22px;
+            background: rgba(226, 0, 116, 0.06);
+            color: var(--white-pure);
+            font: inherit;
+            font-size: 0.76em;
+            font-weight: 600;
+            letter-spacing: 0.7px;
+            cursor: pointer;
+            transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+        }
+
+        .exp-details-toggle:hover {
+            background: rgba(226, 0, 116, 0.12);
+            border-color: rgba(226, 0, 116, 0.62);
+            box-shadow: 0 5px 18px rgba(226, 0, 116, 0.12);
+            transform: translateY(-1px);
+        }
+
+        .exp-details-toggle .toggle-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 17px;
+            height: 17px;
+            color: var(--magenta);
+            font-size: 1.25em;
+            line-height: 1;
+            transition: transform 0.35s ease;
+        }
+
+        .exp-card-v2.details-open .exp-details-toggle .toggle-icon { transform: rotate(45deg); }
+
+        .exp-details-wrap {
+            display: grid;
+            grid-template-rows: 0fr;
+            opacity: 0;
+            margin-top: 0;
+            transition: grid-template-rows 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                        opacity 0.35s ease,
+                        margin-top 0.5s ease;
+        }
+
+        .exp-card-v2.details-open .exp-details-wrap {
+            grid-template-rows: 1fr;
+            opacity: 1;
+            margin-top: 20px;
+        }
+
+        .exp-details-inner {
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .exp-detail-item {
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.018);
+            border: 1px solid rgba(255, 255, 255, 0.045);
+            border-radius: 9px;
+        }
+        .exp-detail-item:last-child { margin-bottom: 0; }
+
+        .exp-detail-title {
+            color: var(--white-pure);
+            font-size: 0.84em;
+            font-weight: 600;
+            line-height: 1.5;
+            margin-bottom: 6px;
+        }
+
+        .exp-detail-impact {
+            color: var(--text-secondary);
+            font-size: 0.8em;
+            font-weight: 300;
+            line-height: 1.62;
+        }
+
+        .exp-detail-impact strong {
+            color: var(--magenta);
+            font-weight: 600;
+            letter-spacing: 0.2px;
+        }
+
+        /* Pseudo-3D pixel art inside the experience cards */
+        .exp-card-v2 > .pixel-art-scene {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 5%;
+            perspective: 1100px;
+            pointer-events: none;
+            opacity: 0;
+            will-change: opacity;
+        }
+        .exp-card-v2 > *:not(.pixel-art-scene) { position: relative; z-index: 1; }
+        .exp-timeline-item:not(.visible) .pixel-art-scene { opacity: 0 !important; }
+        .exp-card-v2.details-open .pixel-art-scene { opacity: 0.28 !important; }
+
+        .pixel-art {
+            --px: 16px;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+        .pixel-t { width: calc(var(--px) * 9); height: calc(var(--px) * 10); animation: tSway 16s ease-in-out infinite alternate; }
+        .pixel-tree { width: calc(var(--px) * 11); height: calc(var(--px) * 12); animation: treeSway 14s ease-in-out infinite alternate; }
+        .pixel-art-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: var(--px);
+            height: var(--px);
+        }
+
+        @keyframes treeSway {
+            from { transform: rotateX(12deg) rotateY(24deg) rotateZ(-1deg); }
+            to   { transform: rotateX(8deg) rotateY(-24deg) rotateZ(1deg); }
+        }
+
+        @media (max-width: 1024px) {
+            .exp-timeline-item { grid-template-columns: 44px 96px minmax(0, 1fr); }
+            .exp-axis-date { font-size: 0.76em; padding-left: 8px; }
+            .exp-card-v2 .pixel-art { --px: 13px; }
+        }
+
+        @media (max-width: 768px) {
+            .exp-timeline { padding-left: 0; }
+            .exp-timeline-axis { left: 15px; }
+            .exp-timeline-item {
+                grid-template-columns: 30px minmax(0, 1fr);
+                margin-bottom: 38px;
+            }
+            .exp-timeline-item .exp-node {
+                grid-column: 1;
+                grid-row: 1;
+                justify-self: center;
+                margin-top: 27px;
+            }
+            .exp-timeline-item .exp-card-v2 {
+                grid-column: 2;
+                grid-row: 1;
+                transform: translateX(24px);
+            }
+            .exp-axis-date { display: none; }
+            .exp-timeline-item.visible .exp-card-v2 { transform: translateX(0); }
+            .exp-timeline-item.visible .exp-card-v2:hover { transform: translateY(-3px); }
+            .exp-card-v2 .pixel-art { --px: 10px; }
+            .exp-card-v2 > .pixel-art-scene { padding-right: 10px; }
+            .exp-detail-item { padding: 12px 13px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .pixel-tree { animation: none; transform: rotateX(10deg) rotateY(18deg); }
+            .exp-timeline-item .exp-card-v2,
+            .exp-timeline-item .exp-axis-date,
+            .exp-node,
+            .exp-details-wrap,
+            .exp-details-toggle .toggle-icon { transition: none; }
+        }
+
+        @media print {
+            .exp-timeline-item .exp-card-v2,
+            .exp-timeline-item .exp-axis-date { opacity: 1 !important; transform: none !important; }
+            .exp-axis-fill { height: 100% !important; }
+            .pixel-art-scene { display: none !important; }
+            .exp-details-toggle { display: none !important; }
+            .exp-details-wrap { grid-template-rows: 1fr !important; opacity: 1 !important; margin-top: 18px !important; }
+        }
     </style>
 </head>
 <body>
@@ -1785,23 +2163,104 @@
     <div class="section-label reveal">Experience</div>
     <h2 class="section-heading reveal stagger-1">Professional <em>Journey</em></h2>
     <div class="divider reveal stagger-2"></div>
-    <div class="exp-grid">
-        <div class="exp-card-v2 reveal stagger-3">
-            <div class="pixel-t-scene" aria-hidden="true"><div class="pixel-t" id="pixelT"></div></div>
-            <div class="exp-top-v2">
-                <span class="exp-company-v2">Dual Student – Data Analyst</span>
-                <span class="exp-badge-v2">09/2023 – Today</span>
+
+    <div class="exp-timeline" id="expTimeline">
+        <div class="exp-timeline-axis" aria-hidden="true">
+            <div class="exp-axis-fill" id="expAxisFill"></div>
+        </div>
+
+        <div class="exp-timeline-item">
+            <div class="exp-node" aria-hidden="true"></div>
+            <div class="exp-axis-date">09/2023</div>
+            <div class="exp-card-v2">
+                <div class="pixel-art-scene" aria-hidden="true">
+                    <div class="pixel-art pixel-t" id="pixelT"></div>
+                </div>
+                <div class="exp-top-v2">
+                    <span class="exp-company-v2">Dual Student – Controlling</span>
+                    <span class="exp-badge-v2">09/2023 – Today</span>
+                </div>
+                <div class="exp-role-v2">Telekom Deutschland GmbH</div>
+                <ul class="exp-list-v2">
+                    <li>Creation of ETL processing logic for automated data extraction and processing</li>
+                    <li>Created financial reports for management</li>
+                    <li>Build and maintain management dashboards and data models in SAP Analytics Cloud and Power BI</li>
+                    <li>Designed and moderated internal workshops on Generative AI</li>
+                    <li>Automation and optimization of recurring processes</li>
+                </ul>
+
+                <button class="exp-details-toggle interactive" type="button" aria-expanded="false" aria-controls="controllingDetails">
+                    <span class="toggle-label">More Details</span>
+                    <span class="toggle-icon" aria-hidden="true">+</span>
+                </button>
+
+                <div class="exp-details-wrap" id="controllingDetails" aria-hidden="true">
+                    <div class="exp-details-inner">
+                        <div class="exp-detail-item">
+                            <div class="exp-detail-title">Creation of ETL processing logic for automated data extraction and processing</div>
+                            <div class="exp-detail-impact"><strong>Impact:</strong> Reusable extraction and transformation logic reduced cumulative manual processing effort by multiple FTE-weeks and shifted recurring work from manual handling to automated workflows.</div>
+                        </div>
+                        <div class="exp-detail-item">
+                            <div class="exp-detail-title">Created financial reports for management</div>
+                            <div class="exp-detail-impact"><strong>Impact:</strong> Supported monthly closing and management reporting by translating financial and non-financial KPIs into clear, decision-oriented reporting outputs.</div>
+                        </div>
+                        <div class="exp-detail-item">
+                            <div class="exp-detail-title">Management dashboards and data models in SAP Analytics Cloud and Power BI</div>
+                            <div class="exp-detail-impact"><strong>Impact:</strong> Established reusable reporting logic that serves as the foundation for management reporting and additional reporting use cases within OSD (Operatives Segment Deutschland).</div>
+                        </div>
+                        <div class="exp-detail-item">
+                            <div class="exp-detail-title">Designed and moderated internal workshops on Generative AI</div>
+                            <div class="exp-detail-impact"><strong>Impact:</strong> Increased practical understanding of current AI capabilities and enabled participants to identify concrete AI-supported workflows for day-to-day work.</div>
+                        </div>
+                        <div class="exp-detail-item">
+                            <div class="exp-detail-title">Automation and optimization of recurring processes</div>
+                            <div class="exp-detail-impact"><strong>Impact:</strong> Developed macros and scripts for cross-system validation of financial and non-financial data, reducing repetitive manual checks, error exposure, and FTE workload.</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="exp-role-v2">Telekom Deutschland GmbH</div>
-            <ul class="exp-list-v2">
-                <li>Creation of ETL processing logic for automated data extraction and processing</li>
-                <li>Created Financial-Reports for the Management</li>
-                <li>Build and maintain management dashboards and data models in SAP Analytics Cloud and Power BI</li>
-                <li>Designed and moderated internal workshops on Generative AI</li>
-                <li>Prepare quarterly ESG reports for senior management</li>
-		<li>Automation and Optimization of recurring processes</li>
-                <li>Consolidate and validate ESG forecasting and planning data across business units</li>
-            </ul>
+        </div>
+
+        <div class="exp-timeline-item">
+            <div class="exp-node" aria-hidden="true"></div>
+            <div class="exp-axis-date">02/2025</div>
+            <div class="exp-card-v2">
+                <div class="pixel-art-scene pixel-tree-scene" aria-hidden="true">
+                    <div class="pixel-art pixel-tree" id="pixelTree"></div>
+                </div>
+                <div class="exp-top-v2">
+                    <span class="exp-company-v2">Dual Student – ESG</span>
+                    <span class="exp-badge-v2">02/2025 – 06/2025</span>
+                </div>
+                <div class="exp-role-v2">Telekom Deutschland GmbH</div>
+                <ul class="exp-list-v2">
+                    <li>Created macros for automated data extraction and processing</li>
+                    <li>Prepared quarterly ESG reports for senior management</li>
+                    <li>Consolidated and validated ESG forecasting and planning data across business units</li>
+                </ul>
+
+                <button class="exp-details-toggle interactive" type="button" aria-expanded="false" aria-controls="esgDetails">
+                    <span class="toggle-label">More Details</span>
+                    <span class="toggle-icon" aria-hidden="true">+</span>
+                </button>
+
+                <div class="exp-details-wrap" id="esgDetails" aria-hidden="true">
+                    <div class="exp-details-inner">
+                        <div class="exp-detail-item">
+                            <div class="exp-detail-title">Created macros for automated data extraction and processing</div>
+                            <div class="exp-detail-impact"><strong>Impact:</strong> Reduced cumulative manual workload by multiple FTE-weeks and, during periods of high personnel turnover, reduced the need to repeatedly onboard colleagues into selected recurring tasks.</div>
+                        </div>
+                        <div class="exp-detail-item">
+                            <div class="exp-detail-title">Prepared quarterly ESG reports for senior management</div>
+                            <div class="exp-detail-impact"><strong>Impact:</strong> Supported quarterly planning and management reporting by translating financial and non-financial ESG information into clear, management-ready reporting outputs.</div>
+                        </div>
+                        <div class="exp-detail-item">
+                            <div class="exp-detail-title">Consolidated and validated ESG forecasting and planning data across business units</div>
+                            <div class="exp-detail-impact"><strong>Impact:</strong> Established a reliable cross-business-unit data basis for ESG forecasts, planning activities, and subsequent management reporting.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
@@ -1986,28 +2445,35 @@
     <div class="section-label reveal">Skills</div>
     <h2 class="section-heading reveal stagger-1">Technical <em>Capabilities</em></h2>
     <div class="divider reveal stagger-2"></div>
+    <div class="skills-legend reveal stagger-3" aria-label="Technical capability proficiency legend">
+        <span class="skills-legend-item"><span class="skills-legend-swatch advanced" aria-hidden="true"></span>Advanced proficiency</span>
+        <span class="skills-legend-item"><span class="skills-legend-swatch" aria-hidden="true"></span>Working knowledge</span>
+    </div>
     <div class="skills-section">
         <div class="skill-category reveal stagger-3">
             <div class="skill-cat-title">AI &amp; Development</div>
             <div class="skill-pills-v2">
-                <span class="pill-v2 expert">Prompt Engineering</span>
-                <span class="pill-v2">Python</span>
-                <span class="pill-v2">Machine Learning</span>
+                <span class="pill-v2 expert" data-level="Advanced proficiency" tabindex="0" aria-label="Prompt Engineering - Advanced proficiency">Prompt Engineering</span>
+                <span class="pill-v2" data-level="Working knowledge" tabindex="0" aria-label="Python - Working knowledge">Python</span>
+                <span class="pill-v2" data-level="Working knowledge" tabindex="0" aria-label="Machine Learning - Working knowledge">Machine Learning</span>
             </div>
         </div>
         <div class="skill-category reveal stagger-4">
             <div class="skill-cat-title">Data &amp; Analytics</div>
             <div class="skill-pills-v2">
-                <span class="pill-v2 expert">SAP Analytics Cloud</span>
-                <span class="pill-v2 expert">Power BI</span>
-                <span class="pill-v2">VBA</span>
+                <span class="pill-v2 expert" data-level="Advanced proficiency" tabindex="0" aria-label="SAP Analytics Cloud - Advanced proficiency">SAP Analytics Cloud</span>
+                <span class="pill-v2 expert" data-level="Advanced proficiency" tabindex="0" aria-label="Power BI - Advanced proficiency">Power BI</span>
+                <span class="pill-v2" data-level="Working knowledge" tabindex="0" aria-label="VBA - Working knowledge">VBA</span>
+                <span class="pill-v2" data-level="Working knowledge" tabindex="0" aria-label="Java - Working knowledge">Java</span>
+                <span class="pill-v2" data-level="Working knowledge" tabindex="0" aria-label="JavaScript - Working knowledge">JavaScript</span>
+                <span class="pill-v2" data-level="Working knowledge" tabindex="0" aria-label="SQL - Working knowledge">SQL</span>
             </div>
         </div>
         <div class="skill-category reveal stagger-5">
             <div class="skill-cat-title">Business</div>
             <div class="skill-pills-v2">
-                <span class="pill-v2">Controlling</span>
-                <span class="pill-v2">ESG</span>
+                <span class="pill-v2" data-level="Working knowledge" tabindex="0" aria-label="Controlling - Working knowledge">Controlling</span>
+                <span class="pill-v2" data-level="Working knowledge" tabindex="0" aria-label="ESG - Working knowledge">ESG</span>
             </div>
         </div>
     </div>
@@ -2051,6 +2517,10 @@
         <div class="lang-card reveal stagger-5">
             <div class="lang-name-v2">English</div>
             <span class="lang-level">B2 – Fluent</span>
+        </div>
+        <div class="lang-card reveal stagger-6">
+            <div class="lang-name-v2">French</div>
+            <span class="lang-level">A2</span>
         </div>
     </div>
 </section>
@@ -2274,43 +2744,90 @@
             new TiltCard(photoCardWrapper);
         }
 
-        // ═ PIXEL T BACKDROP (pseudo-3D, pure CSS layers) ═
-        (function buildPixelT() {
-            const t = document.getElementById('pixelT');
-            if (!t) return;
+        // ═ EXPERIENCE PIXEL ART (pseudo-3D, pure CSS layers) ═
+        (function buildExperiencePixelArt() {
+            function buildPixelArt(element, pixels) {
+                if (!element) return;
+                const layers = 6;
 
-            // T-Form auf 9x10-Raster: Balken oben (2 Reihen), Stamm mittig (3 Spalten)
-            const pixels = [];
-            for (let c = 0; c < 9; c++) { pixels.push([c, 0], [c, 1]); }
-            for (let r = 2; r < 10; r++) { for (let c = 3; c < 6; c++) pixels.push([c, r]); }
+                for (let i = 0; i < layers; i++) {
+                    const layer = document.createElement('div');
+                    layer.className = 'pixel-art-layer';
+                    const depth = (i - (layers - 1) / 2) * 16;
+                    layer.style.transform = 'translateZ(' + depth + 'px)';
 
-            const layers = 6;
-            for (let i = 0; i < layers; i++) {
-                const layer = document.createElement('div');
-                layer.className = 'pixel-t-layer';
-                const depth = (i - (layers - 1) / 2) * 16;
-                layer.style.transform = 'translateZ(' + depth + 'px)';
+                    const mix = i / (layers - 1);
+                    const color = (i === layers - 1)
+                        ? '#E20074'
+                        : 'rgba(226,0,116,' + (0.22 + mix * 0.45).toFixed(2) + ')';
 
-                const mix = i / (layers - 1); // 0 = hinten, 1 = vorne
-                const color = (i === layers - 1)
-                    ? '#E20074'
-                    : 'rgba(226,0,116,' + (0.22 + mix * 0.45).toFixed(2) + ')';
+                    let shadows = pixels.map(([c, r]) =>
+                        'calc(var(--px) * ' + c + ') calc(var(--px) * ' + r + ') 0 0 ' + color);
 
-                let shadows = pixels.map(([c, r]) =>
-                    'calc(var(--px) * ' + c + ') calc(var(--px) * ' + r + ') 0 0 ' + color);
+                    if (i === layers - 1) {
+                        shadows = shadows.concat(pixels.map(([c, r]) =>
+                            'calc(var(--px) * ' + c + ') calc(var(--px) * ' + r + ') 20px 0 rgba(226,0,116,0.35)'));
+                    }
 
-                if (i === layers - 1) { // Front-Layer bekommt Glow
-                    shadows = shadows.concat(pixels.map(([c, r]) =>
-                        'calc(var(--px) * ' + c + ') calc(var(--px) * ' + r + ') 20px 0 rgba(226,0,116,0.35)'));
+                    layer.style.boxShadow = shadows.join(',');
+                    element.appendChild(layer);
                 }
-                layer.style.boxShadow = shadows.join(',');
-                t.appendChild(layer);
             }
+
+            // Telekom-inspired T on a 9x10 grid.
+            const tPixels = [];
+            for (let c = 0; c < 9; c++) tPixels.push([c, 0], [c, 1]);
+            for (let r = 2; r < 10; r++) {
+                for (let c = 3; c < 6; c++) tPixels.push([c, r]);
+            }
+            buildPixelArt(document.getElementById('pixelT'), tPixels);
+
+            // Stylised ESG tree on an 11x12 grid: two canopy tiers plus a trunk.
+            const treePixels = [];
+            const addRow = (row, start, end) => {
+                for (let c = start; c <= end; c++) treePixels.push([c, row]);
+            };
+            addRow(0, 5, 5);
+            addRow(1, 4, 6);
+            addRow(2, 3, 7);
+            addRow(3, 2, 8);
+            addRow(4, 4, 6);
+            addRow(5, 3, 7);
+            addRow(6, 2, 8);
+            addRow(7, 1, 9);
+            addRow(8, 4, 6);
+            addRow(9, 4, 6);
+            addRow(10, 4, 6);
+            addRow(11, 4, 6);
+            buildPixelArt(document.getElementById('pixelTree'), treePixels);
         })();
 
+        // ═ EXPERIENCE DETAILS: expand / collapse each card ═
+        document.querySelectorAll('.exp-details-toggle').forEach(button => {
+            button.addEventListener('click', () => {
+                const card = button.closest('.exp-card-v2');
+                if (!card) return;
+
+                const isOpen = card.classList.toggle('details-open');
+                button.setAttribute('aria-expanded', String(isOpen));
+
+                const label = button.querySelector('.toggle-label');
+                if (label) label.textContent = isOpen ? 'Hide Details' : 'More Details';
+
+                const details = card.querySelector('.exp-details-wrap');
+                if (details) details.setAttribute('aria-hidden', String(!isOpen));
+
+                // Expansion changes timeline height, so recalculate the scroll-linked fill.
+                requestAnimationFrame(updateScrollAnimations);
+                window.setTimeout(updateScrollAnimations, 520);
+            });
+        });
+
         // ═ SCROLL-DRIVEN ANIMATIONS ═
-        const expSection = document.querySelector('.exp-card-v2') || document.getElementById('experience');
-        const tScene = document.querySelector('.pixel-t-scene');
+        const expTimeline = document.getElementById('expTimeline');
+        const expAxisFill = document.getElementById('expAxisFill');
+        const expItems = document.querySelectorAll('.exp-timeline-item');
+        const pixelScenes = document.querySelectorAll('.exp-card-v2 .pixel-art-scene');
         const scrubWrap = document.querySelector('.chart-scrub-wrap');
         const chartLine = document.querySelector('.chart-line');
         const chartFill = document.querySelector('.chart-fill');
@@ -2329,20 +2846,33 @@
         function updateScrollAnimations() {
             const vh = window.innerHeight;
 
-            // ═ PIXEL T: smooth fade in/out mit Sektions-Sichtbarkeit ═
-            // ═ PIXEL T: smooth fade in/out mit Sektions-Sichtbarkeit ═
-		if (expSection && tScene) {
-    		const r = expSection.getBoundingClientRect();
-    
-    		// Offset in pixels. Increase this number to reveal the 'T' even later.
-    		const revealDelay = 125; 
-    
-    		// Add the delay to r.top so the fade-in waits for further scrolling
-    		const visible = Math.min(r.bottom, vh) - Math.max(r.top + revealDelay, 0);
-    		const ratio = Math.max(0, Math.min(1, visible / Math.min(r.height, vh)));
-    
-    		tScene.style.opacity = (ratio * ratio * 1.5).toFixed(3); // eased edges
-		}
+            // ═ EXPERIENCE: pixel art + scroll-driven timeline ═
+            pixelScenes.forEach(scene => {
+                const card = scene.closest('.exp-card-v2');
+                if (!card) return;
+                const r = card.getBoundingClientRect();
+                const revealDelay = 70;
+                const visible = Math.min(r.bottom, vh) - Math.max(r.top + revealDelay, 0);
+                const ratio = Math.max(0, Math.min(1, visible / Math.min(r.height, vh)));
+                scene.style.opacity = Math.min(0.9, ratio * ratio * 0.9).toFixed(3);
+            });
+
+            if (expTimeline && expAxisFill) {
+                const tr = expTimeline.getBoundingClientRect();
+                const refLine = vh * 0.72;
+                let expProgress = (refLine - tr.top) / tr.height;
+                expProgress = Math.max(0, Math.min(1, expProgress));
+
+                expAxisFill.style.height = (expProgress * 100) + '%';
+
+                const fillY = tr.top + expProgress * tr.height;
+                expItems.forEach(item => {
+                    const node = item.querySelector('.exp-node');
+                    const nr = (node || item).getBoundingClientRect();
+                    const nodeCenter = nr.top + nr.height / 2;
+                    item.classList.toggle('visible', fillY >= nodeCenter - 4);
+                });
+            }
 
             // ═ CHART: scroll-gekoppeltes Scrubbing (vor & zurück) ═
             if (scrubWrap && scrubSticky) {
