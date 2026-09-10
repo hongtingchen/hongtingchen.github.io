@@ -2126,9 +2126,14 @@
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .hero-video-wrap { opacity: 0.22; }
-            .hero-video { visibility: hidden; }
+        .hero-video-wrap {
+            opacity: 0.38;
         }
+
+        .hero-video {
+            visibility: visible;
+        }
+    }
     </style>
 </head>
 <body>
@@ -2161,8 +2166,14 @@
 <!-- ═══ HERO ═══ -->
 <div class="hero">
     <div class="hero-video-wrap" aria-hidden="true">
-        <video class="hero-video" autoplay muted loop playsinline preload="metadata">
-            <source src="assets/videos/background.mp4" type="video/mp4">
+        <video
+            class="hero-video"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="auto">
+            <source src="./assets/videos/background.mp4" type="video/mp4">
         </video>
     </div>
     <h1 class="hero-name hero-enter d2" id="hero-name-scrambler" data-text="Hong-Ting Chen">Hong-Ting<br><span class="accent">Chen</span></h1>
