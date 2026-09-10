@@ -2071,6 +2071,64 @@
             .exp-details-toggle { display: none !important; }
             .exp-details-wrap { grid-template-rows: 1fr !important; opacity: 1 !important; margin-top: 18px !important; }
         }
+
+
+        /* ── HERO BACKGROUND VIDEO ─────────────────────── */
+        .hero {
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        .hero-video-wrap {
+            position: absolute;
+            inset: -5%;
+            z-index: 0;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.38;
+            overflow: hidden;
+            -webkit-mask-image: radial-gradient(ellipse at center, #000 48%, rgba(0,0,0,0.9) 62%, transparent 100%);
+            mask-image: radial-gradient(ellipse at center, #000 48%, rgba(0,0,0,0.9) 62%, transparent 100%);
+        }
+
+        .hero-video-wrap::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at center, transparent 38%, rgba(10,10,10,0.22) 68%, rgba(10,10,10,0.92) 100%),
+                linear-gradient(180deg, rgba(10,10,10,0.72) 0%, transparent 28%, transparent 72%, rgba(10,10,10,0.82) 100%);
+        }
+
+        .hero-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            filter: saturate(0.82) contrast(1.04) brightness(0.72);
+            transform: scale(1.03);
+        }
+
+        .hero > *:not(.hero-video-wrap) {
+            position: relative;
+            z-index: 2;
+        }
+
+        @media (max-width: 768px) {
+            .hero-video-wrap {
+                inset: -8%;
+                opacity: 0.28;
+                -webkit-mask-image: radial-gradient(ellipse at center, #000 42%, rgba(0,0,0,0.82) 62%, transparent 100%);
+                mask-image: radial-gradient(ellipse at center, #000 42%, rgba(0,0,0,0.82) 62%, transparent 100%);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .hero-video-wrap { opacity: 0.22; }
+            .hero-video { visibility: hidden; }
+        }
     </style>
 </head>
 <body>
@@ -2102,6 +2160,11 @@
 
 <!-- ═══ HERO ═══ -->
 <div class="hero">
+    <div class="hero-video-wrap" aria-hidden="true">
+        <video class="hero-video" autoplay muted loop playsinline preload="metadata">
+            <source src="assets/videos/background.mp4" type="video/mp4">
+        </video>
+    </div>
     <h1 class="hero-name hero-enter d2" id="hero-name-scrambler" data-text="Hong-Ting Chen">Hong-Ting<br><span class="accent">Chen</span></h1>
     <p class="hero-sub hero-enter d3">Data Analyst @ Deutsche Telekom · B.A. Business Administration</p>
     <div class="hero-cta-row hero-enter d4">
